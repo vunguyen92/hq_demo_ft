@@ -8,8 +8,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 //    final wordPair = WordPair.random();
     return MaterialApp(
-      title: 'Startup Name Generator',
       home: RandomWords(),
+      /*home: Container(
+        color: Colors.white,
+      ),*/
     );
   }
 }
@@ -28,7 +30,7 @@ class RandomWordsState extends State<RandomWords> {
 //    return Text(wordPair.asPascalCase);
     return Scaffold (
       appBar: AppBar(
-        title: Text('Startup Name Generator'),
+        title: Text('Demo create flutter'),
       ),
       body: _buildSuggestions(),
 //      body: new Container(),
