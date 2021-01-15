@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hq_demo_ft/pages/main_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,7 +9,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: RandomWords(),
+      // home: RandomWords(),
+      home: MainScreen(),
     );
   }
 }
