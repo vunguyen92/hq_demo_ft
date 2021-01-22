@@ -575,14 +575,14 @@ class ShopScreenState extends State<ShopScreen> {
 
   List<String> titleCategory;
   List<ImageMidView> imageListMidView;
-  List<ImageBottomView> imageListBotView;
+  List<ImageBottomDetailView> imageListBotDetailView;
 
   @override
   void initState() {
     super.initState();
     titleCategory = DefaultValueModel.titleCategory;
     imageListMidView = DefaultValueModel.imageListMidView;
-    imageListBotView = DefaultValueModel.imageListBotView;
+    imageListBotDetailView = DefaultValueModel.imageListBotDetailView;
   }
 
   @override
@@ -889,35 +889,80 @@ class ShopScreenState extends State<ShopScreen> {
       crossAxisCount: 2,
 
       shrinkWrap: true,
-      children: List.generate(imageListBotView.length, (index) {
+      children: List.generate(imageListBotDetailView.length, (index) {
         return Center(
           child: itemBottomGridView(
-            imageListBotView[index],
+            imageListBotDetailView[index],
           ),
         );
       }),
     );
   }
 
-  Widget itemBottomGridView(ImageBottomView obj) {
+  Widget itemBottomGridView(ImageBottomDetailView obj) {
     return InkWell(
       child: Container(
-        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(5),
+        decoration: new BoxDecoration(
+          border: Border.all(
+            color: Colors.grey,
+            width: 0.25,
+          ),
+        ),
         child: Container(
-          // height: 350,
-          // width: 250,
           child: Column(
             children: [
-              imageListBotView.length > 0
-                  ? Expanded(
-                // height: 100,
+              /*imageListBotDetailView.length > 0
+                  ? Container(
+                margin: EdgeInsets.only(bottom: 4),
+                height: 110,
                 child: Image.network(obj.url, fit: BoxFit.scaleDown),
               )
+                  : null,*/
+              imageListBotDetailView.length > 0
+                  ? Expanded(
+                // margin: EdgeInsets.only(bottom: 4),
+                // height: 110,
+                child: Image.network(obj.url, fit: BoxFit.cover),
+              )
                   : null,
-              Text(obj.name),
-              Text(
-                obj.price,
-                style: TextStyle(color: _colorPrimary),
+              Row(
+                children: [
+                  Text(obj.name),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    obj.price,
+                    style: TextStyle(color: _colorPrimary),
+                  ),
+                  Text(obj.unit),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  qtyControl(obj),
+                  ButtonTheme(
+                    minWidth: 20.0,
+                    buttonColor: Colors.white,
+//                    height: 100.0,
+                    child: FlatButton(
+                      onPressed: () {
+                        _incrementCartShopping(obj.qty);
+                        FocusScope.of(context).unfocus();
+                        obj.qty = 0;
+                      },
+                      child: Icon(
+                        Icons.shopping_cart,
+                        size: 20,
+                        color: _colorPrimary,
+                      ),
+                    ),
+                  ),
+                ],
               )
             ],
           ),
@@ -925,8 +970,89 @@ class ShopScreenState extends State<ShopScreen> {
       ),
       onTap: () {
         print(obj.name);
-        _toastText(obj.name);
       },
+    );
+  }
+
+  Widget qtyControl(ImageBottomDetailView obj) {
+    var ctrl = TextEditingController();
+    return Container(
+      width: MediaQuery.of(context).size.width / 4,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              InkWell(
+                child: Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 4 / 2 / 2,
+                  child: Text(
+                    '-',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+                onTap: () {
+                  obj.qty > 0 ? obj.qty-- : 0;
+                  ctrl.text= obj.qty.toString();
+//                  setState(() {
+//                    obj.qty > 0 ? obj.qty-- : 0;
+//                    ctrl.text= obj.qty.toString();
+//                  });
+                },
+              ),
+//              Container(
+//                width: MediaQuery.of(context).size.width / 4 / 2,
+//                alignment: Alignment.center,
+//                child: Text(obj.qty.toString()),
+//              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 4 / 2,
+                height: 35,
+                alignment: Alignment.center,
+                child: TextField(
+                  controller: ctrl,
+                  maxLines: 1,
+                  maxLength: 4,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "0",
+                    counterStyle: TextStyle(height: double.minPositive),
+                    counterText: "",
+                  ),
+                  onChanged: (text) {
+                    String value = text == "" ? "0" : text;
+                    obj.qty = int.parse(value);
+                  },
+                ),
+              ),
+              InkWell(
+                child: Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 4 / 2 / 2,
+                  child: Text(
+                    '+',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+                onTap: () {
+                  obj.qty++;
+                  ctrl.text= obj.qty.toString();
+                  print(ctrl.text);
+//                  setState(() {
+//
+//                  });
+                },
+              ),
+            ],
+          ),
+          Container(
+            height: 1,
+            width: MediaQuery.of(context).size.width / 4,
+            color: Colors.grey,
+          ),
+        ],
+      ),
     );
   }
 
