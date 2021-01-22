@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hq_demo_ft/pages/home_page/home_screen.dart';
+import 'package:hq_demo_ft/pages/shop_page/shop_screen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class MainScreenStateScreen extends State<MainScreen> {
 
     _screenList = [
       HomeScreen(),
+      ShopScreen(),
       // ShopScreen(
       //   mainScreenBloc: _mainScreenBloc,
       // ),
@@ -38,13 +41,14 @@ class MainScreenStateScreen extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screenList[_selectedIndexBottomBar],
-        bottomNavigationBar: _buildBottomBar(),
+      // body: _screenList[_selectedIndexBottomBar],
+      body: _screenList[1],
+      bottomNavigationBar: _buildBottomBar(),
     );
   }
   Widget _buildBottomBar() {
     return BottomNavigationBar(
-      selectedItemColor: Colors.red,
+      selectedItemColor: Colors.green,
       type: BottomNavigationBarType.fixed,
       currentIndex: _selectedIndexBottomBar,
       onTap: (index) {
@@ -59,23 +63,29 @@ class MainScreenStateScreen extends State<MainScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndexBottomBar = index;
+      Fluttertoast.showToast(
+          msg: "$index",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1
+      );
     });
   }
 
   List<BottomNavigationBarItem> _bottomItemsList = [
     BottomNavigationBarItem(
-      icon: ImageIcon(AssetImage("assets/images/ic_bot_homepage.png"), color: Colors.grey),
-      // activeIcon: ImageIcon(AssetImage("assets/images/ic_bot_homepage_focus.png")),
+      icon: Image.asset('assets/icons/ic_bot_homepage.png', width: 24, height: 24, fit: BoxFit.cover,),
+      activeIcon: Image.asset('assets/icons/ic_bot_homepage_focus.png', width: 24, height: 24, fit: BoxFit.cover,),
       title: Text('Home'),
     ),
     BottomNavigationBarItem(
-      icon: ImageIcon(AssetImage("assets/images/ic_bot_category.png"), color: Colors.grey),
-      // activeIcon: ImageIcon(AssetImage("assets/images/ic_bot_category_focus.png")),
+      icon: Image.asset('assets/icons/ic_bot_shop.png', width: 24, height: 24, fit: BoxFit.cover,),
+      activeIcon: Image.asset('assets/icons/ic_bot_shop_focus.png', width: 24, height: 24, fit: BoxFit.cover,),
       title: Text('Shop'),
     ),
     BottomNavigationBarItem(
-      icon: ImageIcon(AssetImage("assets/images/ic_bot_messenger.png"), color: Colors.grey),
-      // activeIcon: ImageIcon(AssetImage("assets/images/ic_bot_messenger_focus.png")),
+      icon: Image.asset('assets/icons/ic_bot_messenger.png', width: 24, height: 24, fit: BoxFit.cover,),
+      activeIcon: Image.asset('assets/icons/ic_bot_messenger_focus.png', width: 24, height: 24, fit: BoxFit.cover,),
       title: Text('Chat'),
     ),
   ];

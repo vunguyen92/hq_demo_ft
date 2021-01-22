@@ -22,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenStateScreen extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return new Container();
+    return Image.asset('assets/icons/ic_bot_shop.png', width: 24, height: 24,);
   }
 }
 
