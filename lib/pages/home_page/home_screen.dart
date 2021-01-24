@@ -1,16 +1,9 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hq_demo_ft/pages/home_page/home_screen_bloc.dart';
-// import 'package:testflutteroneweekly/model/list_banner_response_model.dart';
-// import 'package:testflutteroneweekly/model/list_bought_product_response_model.dart';
-// import 'package:testflutteroneweekly/model/list_connect_vendor_response_model.dart';
-// import 'package:testflutteroneweekly/pages/home/home_screen_bloc.dart';
-// import 'package:testflutteroneweekly/pages/home/home_screen_event.dart';
-// import 'package:testflutteroneweekly/pages/home/home_screen_state.dart';
-// import 'package:testflutteroneweekly/pages/main_screen/main_screen_bloc.dart';
-// import 'package:testflutteroneweekly/value/strings.dart';
-// import 'package:testflutteroneweekly/widgets/app_loading.dart';
-// import 'package:testflutteroneweekly/widgets/cached_network_image.dart';
+import 'package:hq_demo_ft/values/default_value.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -20,605 +13,296 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenStateScreen extends State<HomeScreen> {
+  Color _colorPrimary = Colors.cyan;
+  String _title = 'nRetail';
+  int _counter = 0;
+  bool _showClearButton = false;
+  TextEditingController _textController = new TextEditingController();
+  PageController pageController;
+  List<String> imageList;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    imageList = DefaultValueModel.imageList;
+    pageController = PageController(initialPage: 0, viewportFraction: 1);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Image.asset('assets/icons/ic_bot_shop.png', width: 24, height: 24,);
+    return Scaffold(
+      body: GestureDetector(
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              elevation: 0,
+              backgroundColor: _colorPrimary,
+              pinned: true,
+              expandedHeight: 150,
+              centerTitle: true,
+              title: Container(
+                margin: EdgeInsets.only(right: 8, top: 11),
+                child: Text(_title),
+              ),
+              actions: <Widget>[
+                iconAppBarButton(Icon(Icons.shopping_cart), _counter, 1),
+                iconAppBarButton(Icon(Icons.notifications), 0, 2),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Container(
+                  height: 35,
+                  margin: EdgeInsets.only(left: 10, right: 10),
+                  decoration: new BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                      new BorderRadius.all(new Radius.circular(10))),
+                  child: searchCombo(),
+                ),
+              ),
+            ),
+            SliverList(delegate: new SliverChildListDelegate(_buildList())),
+          ],
+          physics: ClampingScrollPhysics(),
+        ),
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          _toastText('_body');
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: Icon(Icons.shopping_cart),
+      ), // T
+    );
+  }
+
+  Widget iconAppBarButton(Icon icons, int _counter, int position) {
+    if (_counter < 10 && _counter != 0) {
+      return Container(
+        child: Badge(
+          badgeContent: Text("$_counter"),
+          badgeColor: Colors.white,
+          child: IconButton(
+            icon: icons,
+            onPressed: () {
+              _toastText('$_counter' + ' '+ position.toString() + ' - badge');
+            },
+          ),
+        ),
+        margin: EdgeInsets.only(right: 10, top: 11),
+      );
+    } else {
+      return Container(
+        child: IconButton(
+          icon: icons,
+          onPressed: () {
+            _toastText('$_counter' + ' ' + position.toString() + ' - not');
+          },
+        ),
+        margin: EdgeInsets.only(right: 10, top: 11),
+      );
+    }
+  }
+
+  Widget searchCombo() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: new BorderRadius.all(new Radius.circular(10)),
+      ),
+      child: TextFormField(
+        style: TextStyle(fontSize: 13.0),
+        keyboardType: TextInputType.text,
+//      maxLength: 250,
+        maxLines: 1,
+        cursorColor: Colors.red,
+        controller: _textController,
+        onChanged: (value) {
+          setState(() {
+            _showClearButton = _textController.text != "" ? true : false;
+          });
+        },
+        decoration: InputDecoration(
+          fillColor: Colors.white,
+          contentPadding: EdgeInsets.fromLTRB(0, 0.0, 0, 0.0),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Colors.grey,
+          ),
+          suffixIcon: clearTextButton(),
+          hintText: "Search",
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+          focusedBorder:
+          OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+        ),
+      ),
+    );
+  }
+
+  Widget clearTextButton() {
+    if (!_showClearButton) {
+      return null;
+    } else {
+      return IconButton(
+        onPressed: () {
+          setState(() {
+            _textController.clear();
+            _showClearButton = _textController.text != "" ? true : false;
+          });
+        },
+        icon: Icon(
+          Icons.clear,
+          color: Colors.grey,
+        ),
+      );
+    }
+  }
+
+  List _buildList() {
+    List<Widget> listItems = List();
+
+    listItems.add(topView());
+    // listItems.add(saperatorView());
+    // listItems.add(midView());
+    // listItems.add(saperatorView());
+    // listItems.add(BottomView());
+
+    return listItems;
+  }
+
+  Widget topView() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: _colorPrimary,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(35),
+                bottomRight: Radius.circular(35),
+              ),
+            ),
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+          ),
+          Column(children: [
+            Container(
+              height: 150,
+              margin: EdgeInsets.only(left: 25, right: 25, top: 15, bottom: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+              ),
+              child: PageView.builder(
+                  controller: pageController,
+                  itemCount: imageList.length,
+                  onPageChanged: (page) {
+                    setState(
+                          () {
+                        _currentPage = page;
+                      },
+                    );
+                    print("page: " + "$page");
+                  },
+                  itemBuilder: (context, position) {
+                    return imageSlider(position);
+                  }),
+            ),
+            Container(
+              color: Colors.white,
+              child: pageView(),
+            ),
+          ]),
+        ],
+      ),
+    );
+  }
+
+  Widget imageSlider(int index) {
+    return AnimatedBuilder(
+      animation: pageController,
+      builder: (context, widget) {
+        // HIEU UNG CHO DEP
+//        double value = 1;
+//        if (pageController.position.haveDimensions) {
+//          value = pageController.page - index;
+//          value = (1 - (value.abs() * 0.3)).clamp(0.0, 1.0);
+//        }
+
+        return Center(
+          child: SizedBox(
+            //height: Curves.easeInOut.transform(value)*(120),
+//            width: Curves.easeInOut.transform(value)*(double.infinity),
+            height: double.infinity,
+            width: double.infinity,
+            child: widget,
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(
+          right: 1,
+          left: 1,
+        ),
+        child: imageList.length > 0
+            ? ClipRRect(
+          borderRadius: BorderRadius.circular(5.0),
+          child: Image.network(imageList[index], fit: BoxFit.fill),
+        )
+            : null,
+      ),
+    );
+  }
+
+  Widget pageView() {
+    return Stack(
+      alignment: AlignmentDirectional.topStart,
+      children: <Widget>[
+        Container(
+//          margin: EdgeInsets.only(bottom: 35),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              for (int i = 0; i < imageList.length; i++)
+                if (i == _currentPage) ...[circleBar(true)] else
+                  circleBar(false),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget circleBar(bool isActive) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 150),
+      margin: EdgeInsets.symmetric(horizontal: 5),
+      height: isActive ? 6 : 5,
+      width: isActive ? 17 : 15,
+      decoration: BoxDecoration(
+        color: isActive ? _colorPrimary : _colorPrimary.withOpacity(.4),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+    );
+  }
+
+  void _toastText(String text){
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1
+    );
+  }
+
+  void _incrementCounter() {
+    setState(() {
+      _counter < 10 ? _counter++ : _counter = 0;
+    });
   }
 }
-
-// class HomeScreenStateScreen extends State<HomeScreen> {
-//   HomeScreenBloc _homeScreenBloc;
-//   final _bannerController = PageController(initialPage: 0, keepPage: false);
-//   final _scrollHomeScreen = ScrollController();
-//   final TextEditingController _searchTextController =
-//       new TextEditingController();
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _homeScreenBloc = HomeScreenBloc(
-//       HomeScreenState(isLoading: true, isTransformAppBar: false),
-//     );
-//
-//     /// init context for bloc and call api
-//     _homeScreenBloc.initContext(context);
-//     _homeScreenBloc.add(HomeScreenLoadDataEvent());
-//
-//     _scrollHomeScreen.addListener(() {
-//       /// offset: 140 --> transform appbar
-//       if (_scrollHomeScreen.offset >= 140) {
-//         _homeScreenBloc.add(HomeScreenTransformAppBarEvent(true));
-//       } else {
-//         _homeScreenBloc.add(HomeScreenTransformAppBarEvent(false));
-//       }
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocProvider(
-//       create: (context) => _homeScreenBloc,
-//       child: Scaffold(
-//         backgroundColor: Colors.white,
-//         body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
-//             builder: (context, state) {
-//           if (state.isLoading) {
-//             return AppLoading();
-//           } else {
-//             return _buildBody();
-//           }
-//         }),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildBody() {
-//     return SafeArea(
-//       top: true,
-//       child: GestureDetector(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: <Widget>[
-//             _buildAppBar(),
-//             Expanded(
-//               child: SingleChildScrollView(
-//                 controller: _scrollHomeScreen,
-//                 padding: EdgeInsets.zero,
-//                 physics: ClampingScrollPhysics(),
-//                 child: Column(
-//                   children: <Widget>[
-//                     _buildHeader(),
-//
-//                     /// Block Connect Vendor
-//                     Container(
-//                       color: Colors.white,
-//                       padding: EdgeInsets.only(top: 10),
-//                       child: BlocBuilder<HomeScreenBloc, HomeScreenState>(
-//                         builder: (context, state) {
-//                           if (state.listConnectVendor != null) {
-//                             return _buildBlockConnectVendor(
-//                                 state.listConnectVendor);
-//                           } else {
-//                             return Container();
-//                           }
-//                         },
-//                       ),
-//                     ),
-//
-//                     /// Block Bought Product
-//                     Container(
-//                       padding: EdgeInsets.only(top: 10),
-//                       color: Colors.white,
-//                       child: BlocBuilder<HomeScreenBloc, HomeScreenState>(
-//                         builder: (context, state) {
-//                           if (state.listBoughtProduct != null) {
-//                             return _buildBlockBoughtProduct(
-//                                 state.listBoughtProduct);
-//                           } else {
-//                             return Container();
-//                           }
-//                         },
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//         onTap: () {
-//           FocusScope.of(context).unfocus();
-//         },
-//       ),
-//     );
-//   }
-//
-//   Widget _buildHeader() {
-//     return Container(
-//       child: Stack(
-//         children: <Widget>[
-//           Container(
-//             decoration: BoxDecoration(
-//               color: Colors.red,
-//               borderRadius: BorderRadius.only(
-//                 bottomLeft: Radius.elliptical(30, 10),
-//                 bottomRight: Radius.elliptical(30, 10),
-//               ),
-//             ),
-//             child: _buildSearchBar(),
-//           ),
-//
-//           /// Block banner
-//           Container(
-//             margin: EdgeInsets.only(top: 70),
-//             child: BlocBuilder<HomeScreenBloc, HomeScreenState>(
-//               builder: (context, state) {
-//                 if (state.listBanner != null) {
-//                   return _buildCarouselBanner(state.listBanner);
-//                 } else {
-//                   return Container();
-//                 }
-//               },
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildAppBar() {
-//     return BlocBuilder<HomeScreenBloc, HomeScreenState>(
-//         buildWhen: (previous, current) =>
-//             previous.isTransformAppBar != current.isTransformAppBar,
-//         builder: (context, state) {
-//           bool isTransform =
-//               state.isTransformAppBar != null && state.isTransformAppBar;
-//           return Container(
-//             color: Colors.red,
-//             padding: EdgeInsets.only(right: 5),
-//             height: 40,
-//             child: Row(
-//               children: <Widget>[
-//                 isTransform
-//                     ? _buildSearchBar(
-//                         width: MediaQuery.of(context).size.width / 2 + 50,
-//                         marginTop: 0,
-//                         marginBottom: 2,
-//                         marginLeft: 20,
-//                         marginRight: 10,
-//                       )
-//                     : Container(
-//                         margin: EdgeInsets.only(
-//                             left: MediaQuery.of(context).size.width / 2 - 20),
-//                         child: Text(
-//                           MyStrings.titleHome,
-//                           style: TextStyle(
-//                             color: Colors.white,
-//                             fontSize: 18,
-//                           ),
-//                         ),
-//                       ),
-//                 Spacer(),
-//
-//                 /// Button shopping cart
-//                 Stack(
-//                   children: <Widget>[
-//                     Container(
-//                       width: 30,
-//                       height: 30,
-//                       margin: EdgeInsets.only(right: 17),
-//                       child: FlatButton(
-//                         padding: EdgeInsets.all(0),
-//                         onPressed: () {
-//                           print(
-//                               state.listBanner.map((e) => e.toJson()).toList());
-//                         },
-//                         child: Icon(
-//                           Icons.shopping_cart,
-//                           color: Colors.white,
-//                           size: 28,
-//                         ),
-//                       ),
-//                     ),
-//                     Positioned(
-//                       top: 0,
-//                       right: 4,
-//                       child: Container(
-//                         alignment: Alignment.center,
-//                         width: 16,
-//                         height: 16,
-//                         decoration: BoxDecoration(
-//                           color: Colors.white,
-//                           shape: BoxShape.circle,
-//                         ),
-//                         child: BlocProvider.value(
-//                           value: context.bloc<MainScreenBloc>(),
-//                           child: Text(
-//                             "${context.bloc<MainScreenBloc>().state.quantity ?? 0}",
-//                             style: TextStyle(
-//                               color: Colors.red,
-//                               fontSize: 10,
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-//                     )
-//                   ],
-//                 ),
-//
-//                 /// Button notification
-//                 Stack(
-//                   children: <Widget>[
-//                     BlocListener<HomeScreenBloc, HomeScreenState>(
-//                       listener: (context, state) {},
-//                       child: Container(
-//                         width: 30,
-//                         height: 30,
-//                         margin: EdgeInsets.only(right: 17),
-//                         child: FlatButton(
-//                           padding: EdgeInsets.all(0),
-//                           onPressed: () {},
-//                           child: Icon(
-//                             Icons.notifications,
-//                             color: Colors.white,
-//                             size: 28,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                     Positioned(
-//                       top: 0,
-//                       right: 4,
-//                       child: Container(
-//                         alignment: Alignment.center,
-//                         width: 16,
-//                         height: 16,
-//                         decoration: BoxDecoration(
-//                           color: Colors.white,
-//                           shape: BoxShape.circle,
-//                         ),
-//                         child: Text(
-//                           '5',
-//                           style: TextStyle(
-//                             color: Colors.red,
-//                             fontSize: 10,
-//                           ),
-//                         ),
-//                       ),
-//                     )
-//                   ],
-//                 )
-//               ],
-//             ),
-//           );
-//         });
-//   }
-//
-//   Widget _buildSearchBar(
-//       {double width,
-//       double marginTop,
-//       double marginBottom,
-//       double marginLeft,
-//       double marginRight}) {
-//     return Container(
-//       margin: EdgeInsets.only(
-//         top: marginTop ?? 20,
-//         bottom: marginBottom ?? 60,
-//         left: marginLeft ?? 20,
-//         right: marginRight ?? 20,
-//       ),
-//       width: width ?? MediaQuery.of(context).size.width,
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.all(
-//           Radius.circular(8),
-//         ),
-//       ),
-//       height: 40,
-//       child: Row(
-//         children: <Widget>[
-//           Container(
-//             margin: EdgeInsets.only(left: 10, right: 10),
-//             child: Icon(
-//               Icons.search,
-//               color: Colors.grey,
-//               size: 24,
-//             ),
-//           ),
-//           Container(
-//             child: Expanded(
-//               child: TextField(
-//                 controller: _searchTextController,
-//                 decoration: InputDecoration(
-//                   hintText: MyStrings.txtSearch,
-//                   hintStyle: TextStyle(
-//                     color: Colors.grey,
-//                     fontSize: 16,
-//                     fontWeight: FontWeight.w700,
-//                   ),
-//                   border: InputBorder.none,
-//                   filled: false,
-//                   isDense: true,
-//                 ),
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildItemBanner(BannerModel model) {
-//     return NetWorkImage(
-//       width: MediaQuery.of(context).size.width - 40,
-//       height: 120,
-//       url: model.imageUrl,
-//     );
-//   }
-//
-//   Widget _buildCarouselBanner(List<BannerModel> listBanner) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: <Widget>[
-//         Container(
-//           width: MediaQuery.of(context).size.width - 40,
-//           height: 120,
-//           margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 2),
-//           child: PageView(
-//             controller: _bannerController,
-//             scrollDirection: Axis.horizontal,
-//             children: listBanner.map((e) => _buildItemBanner(e)).toList(),
-//             onPageChanged: (index) {
-//               _homeScreenBloc.add(HomeScreenPageChangedBannerEvent(index));
-//             },
-//           ),
-//         ),
-//         _buildDotForCarouselBanner(listBanner),
-//       ],
-//     );
-//   }
-//
-//   Widget _buildDotForCarouselBanner(List<BannerModel> listBanner) {
-//     return Container(
-//       margin: EdgeInsets.only(top: 5),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children:
-//             listBanner.map((e) => _buildItemDotCarousel(e.id - 1)).toList(),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildItemDotCarousel(int index) {
-//     return BlocBuilder<HomeScreenBloc, HomeScreenState>(
-//         builder: (context, state) {
-//       int _indexCurrent = state.index;
-//       return Container(
-//         margin: EdgeInsets.only(right: 3),
-//         width: 13,
-//         height: 4,
-//         decoration: BoxDecoration(
-//           color: _indexCurrent == index ? Colors.red : Colors.red[200],
-//           borderRadius: BorderRadius.all(
-//             Radius.circular(10),
-//           ),
-//         ),
-//       );
-//     });
-//   }
-//
-//   Widget _buildItemConnectVendor(ConnectVendorModel model) {
-//     return Container(
-//       margin: EdgeInsets.only(right: 20),
-//       child: FlatButton(
-//         padding: EdgeInsets.all(0),
-//         onPressed: () {},
-//         child: NetWorkImage(
-//           width: 130,
-//           height: 80,
-//           url: model.logo,
-//           radius: 4,
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildListConnectVendor(List<ConnectVendorModel> listConnectVendor) {
-//     return ListView.builder(
-//       itemCount: listConnectVendor.length,
-//       scrollDirection: Axis.horizontal,
-//       itemBuilder: (context, index) {
-//         return _buildItemConnectVendor(listConnectVendor[index]);
-//       },
-//     );
-//   }
-//
-//   Widget _buildBlockConnectVendor(List<ConnectVendorModel> listConnectVendor) {
-//     return Container(
-//       height: 200,
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: <Widget>[
-//           Container(
-//             width: MediaQuery.of(context).size.width,
-//             height: 5,
-//             color: Colors.grey,
-//           ),
-//           Container(
-//             padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: <Widget>[
-//                 Container(
-//                   child: Text(
-//                     MyStrings.titleConnectVendor,
-//                     style: TextStyle(
-//                       fontSize: 20,
-//                       color: Colors.red,
-//                       fontWeight: FontWeight.w700,
-//                     ),
-//                   ),
-//                 ),
-//                 Container(
-//                   child: FlatButton(
-//                     padding: EdgeInsets.all(0),
-//                     onPressed: () {},
-//                     child: Row(
-//                       children: <Widget>[
-//                         Text(
-//                           MyStrings.btViewMore,
-//                           style: TextStyle(
-//                             fontSize: 14,
-//                             color: Colors.grey,
-//                             fontWeight: FontWeight.w700,
-//                           ),
-//                         ),
-//                         Container(
-//                           margin: EdgeInsets.only(left: 10),
-//                           child: Icon(
-//                             Icons.navigate_next,
-//                             size: 16,
-//                             color: Colors.grey,
-//                           ),
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                 )
-//               ],
-//             ),
-//           ),
-//           Expanded(
-//             child: Container(
-//               padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-//               child: _buildListConnectVendor(listConnectVendor),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildItemBoughtProduct(BoughtProductModel model) {
-//     return Container(
-//       width: 130,
-//       height: 120,
-//       margin: EdgeInsets.only(right: 20, top: 10),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: <Widget>[
-//           NetWorkImage(
-//             width: 130,
-//             height: 40,
-//             url: model.imageBannerUrl,
-//             radius: 2,
-//           ),
-//           Container(
-//             margin: EdgeInsets.only(top: 8),
-//             child: Text(
-//               "${model.name}",
-//               style: TextStyle(
-//                 fontSize: 16,
-//                 color: Colors.black,
-//                 fontWeight: FontWeight.w600,
-//               ),
-//               maxLines: 2,
-//             ),
-//           ),
-//           Container(
-//             alignment: Alignment.center,
-//             margin: EdgeInsets.only(top: 8),
-//             child: Text(
-//               "P${model.price}",
-//               style: TextStyle(
-//                 fontSize: 16,
-//                 color: Colors.red,
-//                 fontWeight: FontWeight.w600,
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildGridViewBoughtProduct(
-//       List<BoughtProductModel> listBoughtProduct) {
-//     return Container(
-//       child: GridView.builder(
-//           itemCount: listBoughtProduct.length,
-//           scrollDirection: Axis.horizontal,
-//           gridDelegate:
-//               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-//           itemBuilder: (context, index) {
-//             return _buildItemBoughtProduct(listBoughtProduct[index]);
-//           }),
-//     );
-//   }
-//
-//   Widget _buildBlockBoughtProduct(List<BoughtProductModel> listBoughtProduct) {
-//     return Container(
-//       height: 340,
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: <Widget>[
-//           Container(
-//             width: MediaQuery.of(context).size.width,
-//             height: 5,
-//             color: Colors.grey,
-//           ),
-//           Container(
-//             padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: <Widget>[
-//                 Container(
-//                   child: Text(
-//                     MyStrings.titleBoughtProduct,
-//                     style: TextStyle(
-//                       fontSize: 20,
-//                       color: Colors.red,
-//                       fontWeight: FontWeight.w700,
-//                     ),
-//                   ),
-//                 ),
-//                 Container(
-//                   child: FlatButton(
-//                     padding: EdgeInsets.all(0),
-//                     onPressed: () {},
-//                     child: Row(
-//                       children: <Widget>[
-//                         Text(
-//                           MyStrings.btViewMore,
-//                           style: TextStyle(
-//                             fontSize: 14,
-//                             color: Colors.grey,
-//                             fontWeight: FontWeight.w700,
-//                           ),
-//                         ),
-//                         Container(
-//                           margin: EdgeInsets.only(left: 10),
-//                           child: Icon(
-//                             Icons.navigate_next,
-//                             size: 16,
-//                             color: Colors.grey,
-//                           ),
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                 )
-//               ],
-//             ),
-//           ),
-//           Expanded(
-//             child: Container(
-//               padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-//               child: _buildGridViewBoughtProduct(listBoughtProduct),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }

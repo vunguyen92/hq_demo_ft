@@ -42,7 +42,7 @@ class MainScreenStateScreen extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       // body: _screenList[_selectedIndexBottomBar],
-      body: _screenList[1],
+      body: _screenList[0],
       bottomNavigationBar: _buildBottomBar(),
     );
   }

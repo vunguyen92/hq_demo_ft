@@ -87,6 +87,13 @@ class DefaultValueModel {
     ImageBottomDetailView("Cartoon 18",
         'https://i.ytimg.com/vi/E_lByLdKeKY/maxresdefault.jpg', '20', 'THUNG'),
   ];
+
+  static List<String> imageList = [
+    'https://img01.products.bt.co.uk/content/dam/bt/portal/images/articles/tv/TV%20Film%20How%20to%20Train%20Your%20Dragon%20%20The%20Hidden%20World.jpg/_jcr_content/renditions/landscape-desktop.764.430.jpg',
+    'https://img01.products.bt.co.uk/content/dam/bt/portal/images/articles/tv/TV%20Film%20How%20to%20Train%20Your%20Dragon%20%20The%20Hidden%20World.jpg/_jcr_content/renditions/landscape-desktop.764.430.jpg',
+    'https://img01.products.bt.co.uk/content/dam/bt/portal/images/articles/tv/TV%20Film%20How%20to%20Train%20Your%20Dragon%20%20The%20Hidden%20World.jpg/_jcr_content/renditions/landscape-desktop.764.430.jpg',
+    'https://img01.products.bt.co.uk/content/dam/bt/portal/images/articles/tv/TV%20Film%20How%20to%20Train%20Your%20Dragon%20%20The%20Hidden%20World.jpg/_jcr_content/renditions/landscape-desktop.764.430.jpg'
+  ];
 }
 
 class ImageMidView {
