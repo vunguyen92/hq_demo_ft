@@ -23,6 +23,7 @@ class MainScreenStateScreen extends State<MainScreen> {
     _screenList = [
       HomeScreen(),
       ShopScreen(),
+      new Container()
       // ShopScreen(
       //   mainScreenBloc: _mainScreenBloc,
       // ),
@@ -41,8 +42,8 @@ class MainScreenStateScreen extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: _screenList[_selectedIndexBottomBar],
-      body: _screenList[0],
+      body: _screenList[_selectedIndexBottomBar],
+      // body: _screenList[0],
       bottomNavigationBar: _buildBottomBar(),
     );
   }
@@ -51,24 +52,16 @@ class MainScreenStateScreen extends State<MainScreen> {
       selectedItemColor: Colors.green,
       type: BottomNavigationBarType.fixed,
       currentIndex: _selectedIndexBottomBar,
+      items: _bottomItemsList,
       onTap: (index) {
-        /// push index bottom navigation bar
-        // context.bloc<MainScreenBloc>().add(MainScreenChangedBottomBar(index));
         _onItemTapped(index);
       },
-      items: _bottomItemsList,
     );
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndexBottomBar = index;
-      Fluttertoast.showToast(
-          msg: "$index",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1
-      );
     });
   }
 

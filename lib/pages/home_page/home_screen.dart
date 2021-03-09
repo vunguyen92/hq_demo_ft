@@ -19,13 +19,17 @@ class HomeScreenStateScreen extends State<HomeScreen> {
   bool _showClearButton = false;
   TextEditingController _textController = new TextEditingController();
   PageController pageController;
-  List<String> imageList;
+  List<String> _imageList;
+  List<ImageMidView> _imageListMidView;
+  List<ImageBottomView> _imageListBotView;
   int _currentPage = 0;
 
   @override
   void initState() {
     super.initState();
-    imageList = DefaultValueModel.imageList;
+    _imageList = DefaultValueModel.imageList;
+    _imageListMidView = DefaultValueModel.imageListMidView;
+    _imageListBotView = DefaultValueModel.imageListBotView;
     pageController = PageController(initialPage: 0, viewportFraction: 1);
   }
 
@@ -37,18 +41,18 @@ class HomeScreenStateScreen extends State<HomeScreen> {
           slivers: <Widget>[
             SliverAppBar(
               elevation: 0,
-              backgroundColor: _colorPrimary,
+              backgroundColor: Colors.blueAccent,
               pinned: true,
               expandedHeight: 150,
-              centerTitle: true,
-              title: Container(
+              // centerTitle: true,
+              /*title: Container(
                 margin: EdgeInsets.only(right: 8, top: 11),
                 child: Text(_title),
-              ),
-              actions: <Widget>[
-                iconAppBarButton(Icon(Icons.shopping_cart), _counter, 1),
-                iconAppBarButton(Icon(Icons.notifications), 0, 2),
-              ],
+              ),*/
+              /*actions: <Widget>[
+                iconBadgeAppBarButton(Icon(Icons.shopping_cart), _counter),
+                iconNotifyAppBarButton(Icon(Icons.notifications), 0),
+              ],*/
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
                 title: Container(
@@ -56,10 +60,10 @@ class HomeScreenStateScreen extends State<HomeScreen> {
                   margin: EdgeInsets.only(left: 10, right: 10),
                   decoration: new BoxDecoration(
                       color: Colors.white,
-                      borderRadius:
-                      new BorderRadius.all(new Radius.circular(10))),
+                      borderRadius: new BorderRadius.all(new Radius.circular(10))),
                   child: searchCombo(),
                 ),
+                background: appBar(),
               ),
             ),
             SliverList(delegate: new SliverChildListDelegate(_buildList())),
@@ -79,8 +83,20 @@ class HomeScreenStateScreen extends State<HomeScreen> {
     );
   }
 
-  Widget iconAppBarButton(Icon icons, int _counter, int position) {
-    if (_counter < 10 && _counter != 0) {
+  Widget appBar(){
+    return AppBar(
+      centerTitle: true,
+      title: Text(_title),
+      backgroundColor: Colors.red,
+      actions: <Widget>[
+        iconBadgeAppBarButton(Icon(Icons.shopping_cart), _counter),
+        iconNotifyAppBarButton(Icon(Icons.notifications), 0),
+      ],
+    );
+  }
+
+  Widget iconBadgeAppBarButton(Icon icons, int _counter) {
+    if ( _counter > 0 ) {
       return Container(
         child: Badge(
           badgeContent: Text("$_counter"),
@@ -88,18 +104,42 @@ class HomeScreenStateScreen extends State<HomeScreen> {
           child: IconButton(
             icon: icons,
             onPressed: () {
-              _toastText('$_counter' + ' '+ position.toString() + ' - badge');
+              _toastText('$_counter' + ' - badge');
             },
           ),
         ),
         margin: EdgeInsets.only(right: 10, top: 11),
       );
-    } else {
+    }else {
       return Container(
         child: IconButton(
           icon: icons,
           onPressed: () {
-            _toastText('$_counter' + ' ' + position.toString() + ' - not');
+            _toastText('$_counter' + ' - badge');
+          },
+        ),
+        margin: EdgeInsets.only(right: 10, top: 11),
+      );
+    }
+  }
+
+  Widget iconNotifyAppBarButton(Icon icons, int _counter) {
+    if (_counter > 0 ) {
+      return Container(
+        child: IconButton(
+          icon: icons,
+          onPressed: () {
+            _toastText('$_counter' + ' - notify');
+          },
+        ),
+        margin: EdgeInsets.only(right: 10, top: 11),
+      );
+    }else {
+      return Container(
+        child: IconButton(
+          icon: icons,
+          onPressed: () {
+            _toastText('$_counter' + ' - notify');
           },
         ),
         margin: EdgeInsets.only(right: 10, top: 11),
@@ -109,6 +149,7 @@ class HomeScreenStateScreen extends State<HomeScreen> {
 
   Widget searchCombo() {
     return Container(
+      height: 35,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: new BorderRadius.all(new Radius.circular(10)),
@@ -135,8 +176,7 @@ class HomeScreenStateScreen extends State<HomeScreen> {
           suffixIcon: clearTextButton(),
           hintText: "Search",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-          focusedBorder:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
         ),
       ),
     );
@@ -165,10 +205,10 @@ class HomeScreenStateScreen extends State<HomeScreen> {
     List<Widget> listItems = List();
 
     listItems.add(topView());
-    // listItems.add(saperatorView());
-    // listItems.add(midView());
-    // listItems.add(saperatorView());
-    // listItems.add(BottomView());
+    listItems.add(saperatorView());
+    listItems.add(midView());
+    listItems.add(saperatorView());
+    listItems.add(bottomView());
 
     return listItems;
   }
@@ -199,7 +239,7 @@ class HomeScreenStateScreen extends State<HomeScreen> {
               ),
               child: PageView.builder(
                   controller: pageController,
-                  itemCount: imageList.length,
+                  itemCount: _imageList.length,
                   onPageChanged: (page) {
                     setState(
                           () {
@@ -219,6 +259,201 @@ class HomeScreenStateScreen extends State<HomeScreen> {
           ]),
         ],
       ),
+    );
+  }
+
+  Widget saperatorView() {
+    return Container(
+      height: 5,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(top: 5, bottom: 5),
+      color: Colors.grey[300],
+    );
+  }
+
+  Widget midView() {
+    return Container(
+      height: MediaQuery.of(context).size.height / 3,
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 5, right: 5),
+                  child: Text(
+                    "CONNECTED VENDORS",
+                    style: TextStyle(
+                      color: _colorPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                viewMoreButton(true)
+              ],
+            ),
+          ),
+          Expanded(
+            child: buildMidListView(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget viewMoreButton(bool isMidView) {
+    return InkWell(
+      child: Container(
+        margin: EdgeInsets.only(left: 5, right: 5),
+        child: Row(
+          children: [
+            Text(
+              "View More",
+              style: TextStyle(color: Colors.grey),
+            ),
+            Icon(
+              Icons.navigate_next,
+              color: Colors.grey,
+            )
+          ],
+        ),
+      ),
+      onTap: () {
+        if (isMidView) {
+          print("tap view more mid view");
+          /*Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return detailScreen();
+                  *//*Scaffold.of(context).showSnackBar(
+                    SnackBar(content: Text('detailScreen'))
+                  );*//*
+                },
+              ));*/
+          Scaffold.of(context).showSnackBar(
+              SnackBar(content: Text('detailScreen'))
+          );
+        } else {
+          print("tap view more bottom view");
+        }
+      },
+    );
+  }
+
+  Widget buildMidListView() {
+    return ListView.builder(
+      itemCount: _imageListMidView.length,
+//        physics: NeverScrollableScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index) {
+        return itemListMidView(_imageListMidView[index]);
+      },
+    );
+  }
+
+  Widget itemListMidView(ImageMidView obj) {
+    return InkWell(
+      child: Container(
+        margin: EdgeInsets.all(10),
+        child: Container(
+          height: 150,
+          width: 250,
+          child: Column(
+            children: [
+              _imageListMidView.length > 0
+                  ? Container(
+                height: 150,
+                child: Image.network(obj.url, fit: BoxFit.fill),
+              )
+                  : null,
+              Text(obj.name)
+            ],
+          ),
+        ),
+      ),
+      onTap: () {
+        print(obj.name);
+      },
+    );
+  }
+
+  Widget bottomView() {
+    return Container(
+      height: MediaQuery.of(context).size.height / 2,
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 5, right: 5),
+                  child: Text(
+                    "BOUGHT PRODUCTS",
+                    style: TextStyle(
+                      color: _colorPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                viewMoreButton(false)
+              ],
+            ),
+          ),
+          Expanded(
+            child: builBottomGridView(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget builBottomGridView() {
+    return GridView.count(
+      // Create a grid with 2 columns. If you change the scrollDirection to
+      // horizontal, this produces 2 rows.
+      scrollDirection: Axis.horizontal,
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      children: List.generate(_imageListBotView.length, (index) {
+        return Center(
+          child: itemBottomGridView(
+            _imageListBotView[index],
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget itemBottomGridView(ImageBottomView obj) {
+    return InkWell(
+      child: Container(
+        margin: EdgeInsets.all(10),
+        child: Container(
+          child: Column(
+            children: [
+              _imageListBotView.length > 0
+                  ? Container(
+                // height: 150,
+                child: Image.network(obj.url, fit: BoxFit.scaleDown),
+              )
+                  : null,
+              Text(obj.name),
+              Text(
+                obj.price,
+                style: TextStyle(color: _colorPrimary),
+              )
+            ],
+          ),
+        ),
+      ),
+      onTap: () {
+        print(obj.name);
+      },
     );
   }
 
@@ -248,10 +483,10 @@ class HomeScreenStateScreen extends State<HomeScreen> {
           right: 1,
           left: 1,
         ),
-        child: imageList.length > 0
+        child: _imageList.length > 0
             ? ClipRRect(
           borderRadius: BorderRadius.circular(5.0),
-          child: Image.network(imageList[index], fit: BoxFit.fill),
+          child: Image.network(_imageList[index], fit: BoxFit.fill),
         )
             : null,
       ),
@@ -268,7 +503,7 @@ class HomeScreenStateScreen extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              for (int i = 0; i < imageList.length; i++)
+              for (int i = 0; i < _imageList.length; i++)
                 if (i == _currentPage) ...[circleBar(true)] else
                   circleBar(false),
             ],

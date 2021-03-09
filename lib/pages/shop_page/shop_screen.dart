@@ -406,6 +406,7 @@ class ShopScreenState extends State<ShopScreen> {
       ),
       onTap: () {
         print(obj.name);
+        _toastText(obj.name);
       },
     );
   }
@@ -443,7 +444,7 @@ class ShopScreenState extends State<ShopScreen> {
                   maxLength: 4,
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                  // inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "0",

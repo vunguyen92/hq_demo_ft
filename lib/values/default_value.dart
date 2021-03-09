@@ -13,6 +13,81 @@ class DefaultValueModel {
         "Cartoon 4", 'https://i.ytimg.com/vi/E_lByLdKeKY/maxresdefault.jpg'),
   ];
 
+  static  List<ImageBottomView> imageListBotView = [
+    ImageBottomView(
+        "Cartoon 1",
+        'https://img01.products.bt.co.uk/content/dam/bt/portal/images/articles/tv/TV%20Film%20How%20to%20Train%20Your%20Dragon%20%20The%20Hidden%20World.jpg/_jcr_content/renditions/landscape-desktop.764.430.jpg',
+        '30'),
+    ImageBottomView(
+        "Cartoon 2",
+        'https://cdn.bein.com/mena/wp-content/uploads/sites/3/2017/05/ppg.jpg',
+        '10'),
+    ImageBottomView(
+        "Cartoon 3",
+        'https://i.ytimg.com/vi/E_lByLdKeKY/maxresdefault.jpg',
+        '20'),
+    ImageBottomView(
+        "Cartoon 4",
+        'https://img01.products.bt.co.uk/content/dam/bt/portal/images/articles/tv/TV%20Film%20How%20to%20Train%20Your%20Dragon%20%20The%20Hidden%20World.jpg/_jcr_content/renditions/landscape-desktop.764.430.jpg',
+        '30'),
+    ImageBottomView(
+        "Cartoon 5",
+        'https://cdn.bein.com/mena/wp-content/uploads/sites/3/2017/05/ppg.jpg',
+        '10'),
+    ImageBottomView(
+        "Cartoon 6",
+        'https://i.ytimg.com/vi/E_lByLdKeKY/maxresdefault.jpg',
+        '20'),
+    ImageBottomView(
+        "Cartoon 7",
+        'https://img01.products.bt.co.uk/content/dam/bt/portal/images/articles/tv/TV%20Film%20How%20to%20Train%20Your%20Dragon%20%20The%20Hidden%20World.jpg/_jcr_content/renditions/landscape-desktop.764.430.jpg',
+        '30'),
+    ImageBottomView(
+        "Cartoon 8",
+        'https://cdn.bein.com/mena/wp-content/uploads/sites/3/2017/05/ppg.jpg',
+        '10'),
+    ImageBottomView(
+        "Cartoon 9",
+        'https://i.ytimg.com/vi/E_lByLdKeKY/maxresdefault.jpg',
+        '20'),
+    ImageBottomView(
+        "Cartoon 10",
+        'https://img01.products.bt.co.uk/content/dam/bt/portal/images/articles/tv/TV%20Film%20How%20to%20Train%20Your%20Dragon%20%20The%20Hidden%20World.jpg/_jcr_content/renditions/landscape-desktop.764.430.jpg',
+        '30'),
+    ImageBottomView(
+        "Cartoon 11",
+        'https://cdn.bein.com/mena/wp-content/uploads/sites/3/2017/05/ppg.jpg',
+        '10'),
+    ImageBottomView(
+        "Cartoon 12",
+        'https://i.ytimg.com/vi/E_lByLdKeKY/maxresdefault.jpg',
+        '20'),
+    ImageBottomView(
+        "Cartoon 13",
+        'https://img01.products.bt.co.uk/content/dam/bt/portal/images/articles/tv/TV%20Film%20How%20to%20Train%20Your%20Dragon%20%20The%20Hidden%20World.jpg/_jcr_content/renditions/landscape-desktop.764.430.jpg',
+        '30'),
+    ImageBottomView(
+        "Cartoon 14",
+        'https://cdn.bein.com/mena/wp-content/uploads/sites/3/2017/05/ppg.jpg',
+        '10'),
+    ImageBottomView(
+        "Cartoon 15",
+        'https://i.ytimg.com/vi/E_lByLdKeKY/maxresdefault.jpg',
+        '20'),
+    ImageBottomView(
+        "Cartoon 16",
+        'https://img01.products.bt.co.uk/content/dam/bt/portal/images/articles/tv/TV%20Film%20How%20to%20Train%20Your%20Dragon%20%20The%20Hidden%20World.jpg/_jcr_content/renditions/landscape-desktop.764.430.jpg',
+        '30'),
+    ImageBottomView(
+        "Cartoon 17",
+        'https://cdn.bein.com/mena/wp-content/uploads/sites/3/2017/05/ppg.jpg',
+        '10'),
+    ImageBottomView(
+        "Cartoon 18",
+        'https://i.ytimg.com/vi/E_lByLdKeKY/maxresdefault.jpg',
+        '20'),
+  ];
+
   static List<ImageBottomDetailView> imageListBotDetailView = [
     ImageBottomDetailView(
         "Cartoon 1",
