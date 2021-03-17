@@ -66,7 +66,7 @@ class ShopScreenState extends State<ShopScreen> {
             headerView(),
             categoryTitle(),
             listSubCategory(),
-            Container(height: 3, color: Colors.grey, margin: EdgeInsets.fromLTRB(0, 10, 0, 10),),
+            Container(height: 3, color: Colors.grey, margin: EdgeInsets.fromLTRB(0, 5, 0, 5),),
             Expanded(
               child: builBottomGridView(),
             )
@@ -335,9 +335,7 @@ class ShopScreenState extends State<ShopScreen> {
       shrinkWrap: true,
       children: List.generate(imageListBotDetailView.length, (index) {
         return Center(
-          child: itemBottomGridView(
-            imageListBotDetailView[index],
-          ),
+          child: itemBottomGridView(imageListBotDetailView[index],),
         );
       }),
     );
@@ -369,7 +367,7 @@ class ShopScreenState extends State<ShopScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  Text('Giá : ' +
                     obj.price,
                     style: TextStyle(color: _colorPrimary),
                   ),
@@ -412,7 +410,7 @@ class ShopScreenState extends State<ShopScreen> {
   }
 
   Widget qtyControl(ImageBottomDetailView obj) {
-    var ctrl = TextEditingController();
+    var ctrl = TextEditingController(text: obj.qty.toString());
     return Container(
       width: MediaQuery.of(context).size.width / 4,
       child: Column(
@@ -447,11 +445,11 @@ class ShopScreenState extends State<ShopScreen> {
                   // inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "0",
+                    // hintText: "0",
                     counterStyle: TextStyle(height: double.minPositive),
                     counterText: "",
                   ),
-                  onChanged: (text) {
+                  onSubmitted: (text) {
                     String value = text == "" ? "0" : text;
                     obj.qty = int.parse(value);
                   },
