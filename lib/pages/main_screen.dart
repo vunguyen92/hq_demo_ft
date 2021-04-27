@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hq_demo_ft/pages/home_page/home_screen.dart';
 import 'package:hq_demo_ft/pages/shop_page/shop_screen.dart';
+import 'package:hq_demo_ft/shop_example/shop_example_screen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -23,7 +24,8 @@ class MainScreenStateScreen extends State<MainScreen> {
     _screenList = [
       HomeScreen(),
       ShopScreen(),
-      new Container()
+      ShopExampleScreen()
+      // new Container()
       // ShopScreen(
       //   mainScreenBloc: _mainScreenBloc,
       // ),
